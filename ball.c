@@ -6,8 +6,6 @@
 ball initialize_ball(int x, int y, int radius, SDL_Renderer * renderer){
     ball initializing_ball;
 
-    int health_count = 3;
-
     initializing_ball.hitbox.x = x;
     initializing_ball.hitbox.y = y;
     initializing_ball.hitbox.w = 25;
@@ -26,6 +24,7 @@ ball initialize_ball(int x, int y, int radius, SDL_Renderer * renderer){
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     initializing_ball.texture = texture;
     initializing_ball.is_active = false;
+    initializing_ball.is_changed = false;
     return initializing_ball;
 }  
 
@@ -45,12 +44,15 @@ int check_collision_borders(ball current_ball){
     }
 }
 
-int check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
+ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
     if (flag == 1){
         if (current_ball.hitbox.x <= current_rect.x + current_rect.w 
                 && current_ball.hitbox.x > current_rect.x 
                 && current_ball.hitbox.y > current_rect.y) {
-                return 1;
+                current_ball.speed.y *= -1;
+                current_ball.hitbox.y -= 5;
+
+                return current_ball;
         }
     }
     if(flag == 2){
@@ -60,7 +62,8 @@ int check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.y - current_ball.hitbox.h >= current_rect.y) {
                 current_ball.speed.y *= -1;
                 current_ball.hitbox.y += 5;
-                return 1;
+                current_ball.is_changed = true;
+                return current_ball;
             }
 
             else if (current_ball.hitbox.x >= current_rect.x
@@ -69,17 +72,18 @@ int check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.y + current_ball.hitbox.h <= current_rect.y + current_rect.h) {
                 current_ball.speed.y *= -1;
                 current_ball.hitbox.y -= 5;
-                return 1;
+                current_ball.is_changed = true;
+                return current_ball;
             }
 
-            // Check by horizontal
             else if (current_ball.hitbox.y >= current_rect.y
                 && current_ball.hitbox.y <= current_rect.y + current_rect.h
                 && current_ball.hitbox.x - current_ball.hitbox.w <= current_rect.x + current_rect.w
                 && current_ball.hitbox.x - current_ball.hitbox.w >= current_rect.x) {
                 current_ball.speed.x *= -1;
                 current_ball.hitbox.x += 5;
-                return 1;
+                current_ball.is_changed = true;
+                return current_ball;
             }
 
             else if (current_ball.hitbox.y >= current_rect.y
@@ -88,7 +92,8 @@ int check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.x + current_ball.hitbox.w <= current_rect.x + current_rect.w) {
                 current_ball.speed.x *= -1;
                 current_ball.hitbox.x += 5;
-                return 1;
+                current_ball.is_changed = true;
+                return current_ball;
             }
     }
 }
