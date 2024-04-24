@@ -3,7 +3,7 @@
 #include "headers/allheaders.h"
 #include "headers/ball.h"
 
-ball initialize_ball(int x, int y, int radius, SDL_Renderer * renderer){
+ball initialize_ball(float  x, float  y, float  radius, SDL_Renderer * renderer){
     ball initializing_ball;
 
     initializing_ball.hitbox.x = x;
@@ -16,8 +16,8 @@ ball initialize_ball(int x, int y, int radius, SDL_Renderer * renderer){
     // initializing_ball.source_image.w = 100;
     // initializing_ball.source_image.h = 100;
 
-    initializing_ball.speed.x = -1;
-    initializing_ball.speed.y = -1;
+    initializing_ball.speed.x = -0.2;
+    initializing_ball.speed.y = -0.2;
 
     SDL_Surface *surface = SDL_CreateRGBSurface(0, 200, 150, 32, 0, 0, 0, 0);
     SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 255, 255));
@@ -29,7 +29,7 @@ ball initialize_ball(int x, int y, int radius, SDL_Renderer * renderer){
 }  
 
 
-int check_collision_borders(ball current_ball){
+float  check_collision_borders(ball current_ball){
     if(
         (current_ball.hitbox.x == 0)
         || (current_ball.hitbox.y == 0)
@@ -44,7 +44,7 @@ int check_collision_borders(ball current_ball){
     }
 }
 
-ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
+ball check_collision(ball current_ball, SDL_Rect  current_rect, float  flag){
     if (flag == 1){
         if (current_ball.hitbox.x <= current_rect.x + current_rect.w 
                 && current_ball.hitbox.x > current_rect.x 
@@ -61,7 +61,7 @@ ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.y - current_ball.hitbox.h <= current_rect.y + current_rect.h
                 && current_ball.hitbox.y - current_ball.hitbox.h >= current_rect.y) {
                 current_ball.speed.y *= -1;
-                current_ball.hitbox.y += 5;
+                // current_ball.hitbox.y += 5;
                 current_ball.is_changed = true;
                 return current_ball;
             }
@@ -71,7 +71,7 @@ ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.y + current_ball.hitbox.h >= current_rect.y
                 && current_ball.hitbox.y + current_ball.hitbox.h <= current_rect.y + current_rect.h) {
                 current_ball.speed.y *= -1;
-                current_ball.hitbox.y -= 5;
+                // current_ball.hitbox.y -= 5;
                 current_ball.is_changed = true;
                 return current_ball;
             }
@@ -81,7 +81,7 @@ ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.x - current_ball.hitbox.w <= current_rect.x + current_rect.w
                 && current_ball.hitbox.x - current_ball.hitbox.w >= current_rect.x) {
                 current_ball.speed.x *= -1;
-                current_ball.hitbox.x += 5;
+                // current_ball.hitbox.x += 5;
                 current_ball.is_changed = true;
                 return current_ball;
             }
@@ -91,14 +91,14 @@ ball check_collision(ball current_ball, SDL_Rect  current_rect, int flag){
                 && current_ball.hitbox.x + current_ball.hitbox.w >= current_rect.x
                 && current_ball.hitbox.x + current_ball.hitbox.w <= current_rect.x + current_rect.w) {
                 current_ball.speed.x *= -1;
-                current_ball.hitbox.x += 5;
+                // current_ball.hitbox.x += 5;
                 current_ball.is_changed = true;
                 return current_ball;
             }
     }
 }
 
-ball update_ball_qualities(ball current_ball, int flag){
+ball update_ball_qualities(ball current_ball, float  flag){
     if (flag == 1){
         current_ball.source_image.x = 200;
         current_ball.source_image.w = 200;
@@ -120,7 +120,7 @@ ball update_ball_qualities(ball current_ball, int flag){
     return current_ball;
 }
 
-ball update_ball_position(ball current_ball, int x, int y){
+ball update_ball_position(ball current_ball, float  x, float  y){
     current_ball.hitbox.x = x;
     current_ball.hitbox.y = y;
     return current_ball;

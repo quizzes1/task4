@@ -23,7 +23,7 @@ racket initialize_racket(SDL_Renderer * renderer){
     return initializing_racket;
 }
 
-racket move_racket(racket current_racket, int flag){
+racket move_racket(racket current_racket, float flag){
     if (flag == 1){
         current_racket.rect.x += current_racket.speed.x;
     }

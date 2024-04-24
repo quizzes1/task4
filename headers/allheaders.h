@@ -6,8 +6,8 @@ typedef enum bool {false, true} bool;
 typedef enum direction{left, right, up, down} direction;
 
 typedef struct point {
-    int x;
-    int y;
+    float x;
+    float y;
 } point;
 
 typedef struct rgb {

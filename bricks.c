@@ -3,9 +3,9 @@
 #include "headers/bricks.h"
 #include "headers/allheaders.h"
 
-int brick_colours[4][3] = {{34, 139, 34}, {255, 215, 0}, {165, 42, 42}, {192, 192, 192}};
+int  brick_colours[4][3] = {{34, 139, 34}, {255, 215, 0}, {165, 42, 42}, {192, 192, 192}};
 
-bricks initialize_brick(int x, int y, int health_points, int brick_width, int brick_height, SDL_Renderer * renderer){
+bricks initialize_brick(float  x, float  y, float  health_points, float  brick_width, float  brick_height, SDL_Renderer * renderer){
     bricks initializing_brick;
     initializing_brick.health_points = health_points;
 
@@ -28,24 +28,22 @@ bricks initialize_brick(int x, int y, int health_points, int brick_width, int br
 }
 
 
-bricks change_health_point(bricks current_brick){
+void change_health_point(bricks *current_brick){
     // printf("1");
-    if(current_brick.health_points != 4){
-        current_brick.health_points--;
+    if(current_brick->health_points != 4){
+        current_brick->health_points--;
     }
-    if(current_brick.health_points == 0){
-        current_brick.is_existing = false;
+    if(current_brick->health_points == 0){
+        current_brick->is_existing = false;
     }
-    printf("1");
-    printf("\n%d %d", current_brick.rect.x, current_brick.rect.y);
-    return current_brick;
+    // printf("1");
+    // printf("\n%d %d %d %d", current_brick->rect.x, current_brick->rect.y, current_brick->health_points, current_brick->is_existing);
 }
 
-void draw_bricks(bricks bricks_list[], int bricks_count, SDL_Renderer * renderer){
+void draw_bricks(bricks *bricks_list, int bricks_count, SDL_Renderer * renderer){
     for(int i = 0; i < bricks_count; i++){
-        if(bricks_list[i].is_existing){
+        if(bricks_list[i].is_existing == true){
             SDL_RenderCopy(renderer, bricks_list[i].texture, NULL, &bricks_list[i].rect);
         }
     }
 }
-

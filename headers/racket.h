@@ -8,5 +8,5 @@ typedef struct racket{
 } racket;
 
 racket initialize_racket(SDL_Renderer * renderer);
-racket move_racket(racket current_racket, int flag);
+racket move_racket(racket current_racket, float flag);
 void draw_racket(SDL_Renderer * renderer, racket current_racket);

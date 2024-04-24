@@ -8,8 +8,8 @@ typedef struct bricks{
     int is_existing;
 } bricks;
 
-bricks initialize_brick(int x, int y, int health_points, int brick_width, int brick_height, SDL_Renderer * renderer);
-bricks change_health_point(bricks current_brick);
+bricks initialize_brick(float x, float y, float health_points, float brick_width, float brick_height, SDL_Renderer * renderer);
+void change_health_point(bricks *current_brick);
 void draw_bricks(bricks bricks_list[], int bricks_count, SDL_Renderer * renderer);
 
 
