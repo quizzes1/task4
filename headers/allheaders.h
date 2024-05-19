@@ -2,6 +2,7 @@
 #include <math.h>
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
+#define INPUT_DELAY 5
 typedef enum bool {false, true} bool;
 typedef enum direction{left, right, up, down} direction;
 

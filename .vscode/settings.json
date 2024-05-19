@@ -5,6 +5,7 @@
         "allheaders.h": "c",
         "math.h": "c",
         "ball.h": "c",
-        "racket.h": "c"
+        "racket.h": "c",
+        "insertion_sort.h": "c"
     }
 }

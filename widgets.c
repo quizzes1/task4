@@ -3,5 +3,8 @@
 #include "allheaders.h"
 
 void initialize_widgets(){
-    
+    int a;
 }
+
+
+

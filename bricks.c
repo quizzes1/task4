@@ -47,3 +47,5 @@ void draw_bricks(bricks *bricks_list, int bricks_count, SDL_Renderer * renderer)
         }
     }
 }
+
+ 
