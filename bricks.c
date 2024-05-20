@@ -18,26 +18,41 @@ bricks initialize_brick(float  x, float  y, float  health_points, float  brick_w
     // initializing_brick.source_image.y = 100;
     // initializing_brick.source_image.w = 100;
     // initializing_brick.source_image.h = 100;
-
-    SDL_Surface *surface = SDL_CreateRGBSurface(0, 200, 150, 32, 0, 0, 0, 0);
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 255, 255));
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    initializing_brick.texture = texture;
+    // 192, 192, 192 Silver
+    // 165, 42, 42 Brown
+    // 255, 215, 0 Gold
+    // 34, 139, 34 Forest
+    change_colour_bricks(&initializing_brick, renderer);
     initializing_brick.is_existing = true;
     return initializing_brick;
 }
 
 
 void change_health_point(bricks *current_brick){
-    // printf("1");
     if(current_brick->health_points != 4){
         current_brick->health_points--;
     }
     if(current_brick->health_points == 0){
         current_brick->is_existing = false;
     }
-    // printf("1");
-    // printf("\n%d %d %d %d", current_brick->rect.x, current_brick->rect.y, current_brick->health_points, current_brick->is_existing);
+}
+
+void change_colour_bricks(bricks *current_brick, SDL_Renderer* renderer){
+    SDL_Surface *surface = SDL_CreateRGBSurface(0, 200, 150, 32, 0, 0, 0, 0);
+    if(current_brick->health_points == 1){
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 34, 139, 34));
+    }
+    else if(current_brick->health_points == 2){
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 215, 0));
+    }
+    else if(current_brick->health_points == 3){
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 165, 42, 42));
+    }
+    else if(current_brick->health_points == 4){
+        SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 192, 192, 192));
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    current_brick->texture = texture;
 }
 
 void draw_bricks(bricks *bricks_list, int bricks_count, SDL_Renderer * renderer){

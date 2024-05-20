@@ -6,6 +6,9 @@
         "math.h": "c",
         "ball.h": "c",
         "racket.h": "c",
-        "insertion_sort.h": "c"
+        "insertion_sort.h": "c",
+        "bricks.h": "c",
+        "widgets.h": "c",
+        "sdl_ttf.h": "c"
     }
 }

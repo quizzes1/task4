@@ -38,21 +38,27 @@ int main(int argc, char *argv[]){
         bricks_list[i] = initialize_brick(bricks_qualities_list[i][0], bricks_qualities_list[i][1], bricks_qualities_list[i][2], bricks_qualities_list[i][3], bricks_qualities_list[i][4], renderer);
     }
     Uint32 last_ticks = 0;
+    widgets health_widget = initialize_widgets_health(renderer);
+
     while(true){
+        
         if (health_count <= 0){
             printf("\nYou've lost! ");
             break;
         }
+
         if(SDL_GetTicks() - last_ticks < INPUT_DELAY){
             continue;
         }
         else{
             last_ticks = SDL_GetTicks();
         }
+
+        draw_widget(&health_widget, renderer, health_count);    
         draw_racket(renderer, main_racket);
         draw_ball(renderer, main_ball);
         draw_bricks(bricks_list, 9, renderer);
-        
+
         if(main_ball.is_active == true){
             for(int i = 0; i < 9; i++){
                 if(bricks_list[i].is_existing == true){
@@ -60,6 +66,7 @@ int main(int argc, char *argv[]){
                         if (main_ball.is_changed == true){          
                             main_ball.is_changed = false;
                             change_health_point(&bricks_list[i]);
+                            change_colour_bricks(&bricks_list[i], renderer);
                         }
                 }
             }
@@ -96,16 +103,26 @@ int main(int argc, char *argv[]){
             if ( SDL_KEYDOWN == window_event.type){
                    switch(window_event.key.keysym.sym){
                         case SDLK_a:
-                            move_racket(&main_racket, 2);
-                            if(main_ball.is_active == false){    
-                                update_ball_position(&main_ball, main_racket.rect.x+main_racket.rect.w/3+5, main_racket.rect.y-main_racket.rect.h);
+                            if(main_racket.rect.x == 0){
+                                continue;
+                            }
+                            else{
+                                move_racket(&main_racket, 2);
+                                if(main_ball.is_active == false){    
+                                    update_ball_position(&main_ball, main_racket.rect.x+main_racket.rect.w/3+5, main_racket.rect.y-main_racket.rect.h);
+                                }
                             }
                             break;
     
                         case SDLK_d:
-                            move_racket(&main_racket, 1);
-                            if(main_ball.is_active == false){
-                                update_ball_position(&main_ball, main_racket.rect.x+main_racket.rect.w/3+5, main_racket.rect.y-main_racket.rect.h);
+                            if(main_racket.rect.x+main_racket.rect.w == SCREEN_WIDTH){
+                                continue;
+                            }
+                            else{
+                                move_racket(&main_racket, 1);
+                                if(main_ball.is_active == false){
+                                    update_ball_position(&main_ball, main_racket.rect.x+main_racket.rect.w/3+5, main_racket.rect.y-main_racket.rect.h);
+                                }
                             }
                             break;
                         case SDLK_SPACE:

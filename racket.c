@@ -9,7 +9,7 @@ racket initialize_racket(SDL_Renderer * renderer){
     initializing_racket.rect.h = 25;
     initializing_racket.rect.x = SCREEN_WIDTH/2;
     initializing_racket.rect.y = SCREEN_HEIGHT-initializing_racket.rect.h-1;
-    initializing_racket.speed.x = 50;
+    initializing_racket.speed.x = 20;
 
     // initializing_racket.source_image.x = 100;
     // initializing_racket.source_image.w = 100;
