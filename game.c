@@ -1,18 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
+#include <time.h>
 #include "headers/allheaders.h"
 #include "headers/ball.h"
 #include "headers/bonuses.h"
 #include "headers/bricks.h"
 #include "headers/racket.h"
 #include "headers/widgets.h"
-
+#include "headers/bonuses.h"
 
 int bricks_qualities_list[9][6] = {{300, 105, 2, 100, 50}, {450, 105, 3, 100, 50}, {600, 105, 1, 100, 50}, {300, 205, 1, 100, 50}, {450, 205, 1, 100, 50}, {600, 205, 1, 100, 50}, 
     {300, 305, 1, 100, 50}, {450, 305, 1, 100, 50}, {600, 305, 4, 100, 50}
 };
 // parser?
 int main(int argc, char *argv[]){
+    srand(time(NULL));
     SDL_Init(SDL_INIT_EVERYTHING);
     
     SDL_Window *window = SDL_CreateWindow("Menu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
@@ -39,6 +42,11 @@ int main(int argc, char *argv[]){
     }
     Uint32 last_ticks = 0;
     widgets health_widget = initialize_widgets_health(renderer);
+    extra_life bonus_extra_life;
+    bool is_bonus_active = false;
+    int first_collision = 0;
+
+    
 
     while(true){
         
@@ -54,33 +62,55 @@ int main(int argc, char *argv[]){
             last_ticks = SDL_GetTicks();
         }
 
-        draw_widget(&health_widget, renderer, health_count);    
+        draw_widget(&health_widget, renderer, health_count);
         draw_racket(renderer, main_racket);
         draw_ball(renderer, main_ball);
         draw_bricks(bricks_list, 9, renderer);
-
+        if(is_bonus_active == true){
+            draw_bonus_extra_life(renderer, &bonus_extra_life);
+            bonus_extra_life.drect.y += bonus_extra_life.speed.y;
+            if(check_collision_extra_life(&bonus_extra_life, &main_racket.rect) == 1){
+                health_count++;
+                is_bonus_active = false;
+            }
+            if(check_collision_extra_life_border(&bonus_extra_life) == 1){
+                is_bonus_active = false;
+            }
+        }
         if(main_ball.is_active == true){
             for(int i = 0; i < 9; i++){
                 if(bricks_list[i].is_existing == true){
                     check_collision(&main_ball, &bricks_list[i].rect, 2);
-                        if (main_ball.is_changed == true){          
-                            main_ball.is_changed = false;
-                            change_health_point(&bricks_list[i]);
-                            change_colour_bricks(&bricks_list[i], renderer);
+                    if (main_ball.is_changed == true){          
+                        main_ball.is_changed = false;
+                        if(first_collision == 0){first_collision = 1;}
+                        change_health_point(&bricks_list[i]);
+                        change_colour_bricks(&bricks_list[i], renderer);
+                    }
+                    if(bricks_list[i].is_existing == false){
+                        if(rand()%5 == 0){
+                            bonus_extra_life = initialize_extra_life_bonus(renderer, &bricks_list[i].rect);
+                            is_bonus_active = true;
                         }
+                        
+                    }
+
                 }
             }
             int is_collision_with_borders = check_collision_borders(main_ball);
             check_collision(&main_ball, &main_racket.rect, 1);
             
             if (is_collision_with_borders == 1){
+                if(first_collision == 0){first_collision = 1;}
                 main_ball.speed.x *= -1;
                 main_ball.hitbox.x += 5;
             }else if (is_collision_with_borders == 2) {
+                if(first_collision == 0){first_collision = 1;}
                 main_ball.speed.y *= -1;
                 main_ball.hitbox.y += 5;
             }
             else if (is_collision_with_borders == 3) {
+                if(first_collision == 0){first_collision = 1;}
                 main_ball.speed.x *= -1;
                 main_ball.hitbox.x -=5;
             }
@@ -93,6 +123,10 @@ int main(int argc, char *argv[]){
             
             main_ball.hitbox.x += main_ball.speed.x;
             main_ball.hitbox.y += main_ball.speed.y;
+        }
+        if(first_collision == 1){
+            first_collision = 2;
+            main_ball.speed.x += 1;
         }
 
         if ( SDL_PollEvent ( &window_event ) ){

@@ -11,12 +11,7 @@ ball initialize_ball(float  x, float  y, float  radius, SDL_Renderer * renderer)
     initializing_ball.hitbox.w = 25;
     initializing_ball.hitbox.h = 25;
 
-    // initializing_ball.source_image.x = 100;
-    // initializing_ball.source_image.y = 100;
-    // initializing_ball.source_image.w = 100;
-    // initializing_ball.source_image.h = 100;
-
-    initializing_ball.speed.x = -1;
+    initializing_ball.speed.x = 0;
     initializing_ball.speed.y = -1;
 
     SDL_Surface *surface = SDL_CreateRGBSurface(0, 200, 150, 32, 0, 0, 0, 0);
