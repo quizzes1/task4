@@ -10,4 +10,6 @@ typedef struct widgets{
 } widgets;
 
 widgets initialize_widgets_health(SDL_Renderer * renderer);
-void draw_widget(widgets *current_widget, SDL_Renderer * renderer, int health_count);
+void draw_widget_health(widgets *current_widget, SDL_Renderer * renderer, int health_count);
+void draw_widget_lose_screen(widgets *current_widget, SDL_Renderer * renderer);
+widgets initialize_loser_screen(SDL_Renderer * renderer);
