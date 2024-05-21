@@ -84,13 +84,55 @@ widgets initialize_loser_screen(SDL_Renderer * renderer){
     initializing_widget.image_rect.x = 1000;
     initializing_widget.image_rect.y = 180;
 
+    return initializing_widget;
+}
 
+widgets initialize_main_title(SDL_Renderer * renderer){
+    widgets initializing_widget;
+    TTF_Init();
+    initializing_widget.font = TTF_OpenFont("fonts_and_images/font.ttf", 100);
+
+    if (!initializing_widget.font){
+        printf("Cannot download font!");
+        exit(0);
+    }
+    SDL_Color text_colour;
+    text_colour.r = 255;
+    text_colour.g = 255;
+    text_colour.b = 255;
+    text_colour.a = SDL_ALPHA_OPAQUE;
+
+    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_widget.font, "ARKANOID", text_colour, 900);
+    SDL_Texture *title_text = SDL_CreateTextureFromSurface(renderer, stext);
+    
+    initializing_widget.texture = title_text;
+    initializing_widget.drect.h = 150;
+    initializing_widget.drect.w = 400;
+    initializing_widget.drect.x = SCREEN_WIDTH/2-200;
+    initializing_widget.drect.y = SCREEN_HEIGHT/2 - 200;
 
     return initializing_widget;
 }
 
+void update_main_title(SDL_Renderer * renderer, widgets * current_widget, SDL_Color * col){
+
+    SDL_Color text_colour;
+    text_colour.r = col->r;
+    text_colour.g = col->g;
+    text_colour.b = col->b;
+    text_colour.a = SDL_ALPHA_OPAQUE;
+
+    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(current_widget->font, "ARKANOID", text_colour, 900);
+    SDL_Texture *title_text = SDL_CreateTextureFromSurface(renderer, stext);
+    
+    current_widget->texture = title_text;
+}
+
+void draw_main_title(SDL_Renderer *renderer, widgets * current_widget){
+    SDL_RenderCopy(renderer, current_widget->texture, NULL, &current_widget->drect); 
+}
+
 void draw_widget_lose_screen(widgets *current_widget, SDL_Renderer * renderer){
-    // SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, current_widget->texture, NULL, &current_widget->drect);
     SDL_RenderCopy(renderer, current_widget->image_texture, NULL, &current_widget->image_rect);
 }

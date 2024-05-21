@@ -1,7 +1,9 @@
+#include <stdio.h>
+#include <string.h>
 #include "headers/buttons.h"
-#include "headers/allheaders.h"
 
-button initialize_button(SDL_Renderer * renderer){
+
+button initialize_button(SDL_Renderer * renderer, char *name, point coordinates){
     button initializing_button;
     TTF_Init();
     initializing_button.font = TTF_OpenFont("fonts_and_images/font.ttf", 100);
@@ -9,12 +11,48 @@ button initialize_button(SDL_Renderer * renderer){
         printf("Cannot download font on button!");
         exit(0);
     }
-    SDL_Color text_colour;
-    text_colour.r = 255;
-    text_colour.g = 255;
-    text_colour.b = 255;
-    text_colour.a = SDL_ALPHA_OPAQUE;
+    initializing_button.main_col.a = SDL_ALPHA_OPAQUE;
+    initializing_button.main_col.r = 255;
+    initializing_button.main_col.g = 255;
+    initializing_button.main_col.b = 255;
 
-    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_button.font, "Health points", text_colour, 600);
+    initializing_button.highlight_col.a = SDL_ALPHA_OPAQUE;
+    initializing_button.highlight_col.r = 255;
+    initializing_button.highlight_col.g = 0;
+    initializing_button.highlight_col.b = 0;
+
+    strcpy(initializing_button.name, name);
+
+    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_button.font, initializing_button.name, initializing_button.main_col, 600);
     SDL_Texture *health_text = SDL_CreateTextureFromSurface(renderer, stext);
+
+    initializing_button.texture = health_text;
+    initializing_button.drect.h = 100;
+    initializing_button.drect.w = 300;
+    initializing_button.drect.x = coordinates.x;
+    initializing_button.drect.y = coordinates.y;
+    
+    return initializing_button;
+}
+
+button update_button(SDL_Renderer * renderer, button current_button, SDL_Rect mouse_point){
+    if (SDL_HasIntersection(&current_button.drect, &mouse_point)){
+        current_button.is_selected = true;
+        SDL_Color col = {current_button.highlight_col.r, current_button.highlight_col.g, current_button.highlight_col.b, 0};
+        SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(current_button.font,current_button.name, col, 600);
+        SDL_Texture *main_text = SDL_CreateTextureFromSurface(renderer, stext);
+        current_button.texture = main_text;
+    }
+    else{
+        current_button.is_selected = false;
+        SDL_Color col = {current_button.main_col.r, current_button.main_col.g, current_button.main_col.b, 0};
+        SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(current_button.font, current_button.name, col, 600);
+        SDL_Texture *main_text = SDL_CreateTextureFromSurface(renderer, stext);
+        current_button.texture = main_text;
+    }
+    return current_button;
+}
+
+void draw_button(button *current_button, SDL_Renderer * renderer){
+    SDL_RenderCopy(renderer, current_button->texture, NULL, &current_button->drect);
 }

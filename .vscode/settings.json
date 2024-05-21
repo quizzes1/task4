@@ -12,6 +12,7 @@
         "sdl_ttf.h": "c",
         "bonuses.h": "c",
         "sdl_image.h": "c",
-        "cstdint": "c"
+        "cstdint": "c",
+        "buttons.h": "c"
     }
 }
