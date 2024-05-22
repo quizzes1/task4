@@ -13,31 +13,19 @@
 
 
 
-void game(){
+void game(int bricks_qualities_list[][5], int array_size, SDL_Window *window, SDL_Renderer * renderer){
     srand(time(NULL));
-    SDL_Init(SDL_INIT_EVERYTHING);
-    
-    SDL_Window *window = SDL_CreateWindow("ARKANOID", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-    if (NULL == window){
-        printf("Couldn't create window!");
-        return 1;
-    }
-    
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL){
-        printf("Couldn't create renderer!");
-        return 1;
-    }
-    SDL_SetRenderDrawColor(renderer, 85, 85, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderPresent(renderer);
-
     SDL_Event window_event;
     int health_count = 3;
+    int active_bricks = 0;
     racket main_racket = initialize_racket(renderer);
     ball main_ball = initialize_ball(main_racket.rect.x+main_racket.rect.w/3+5, main_racket.rect.y-main_racket.rect.h, 3, renderer);
-    bricks bricks_list[level_count_bricks];
-    for(int i = 0; i < level_count_bricks; i++){
+    bricks bricks_list[array_size];
+    for(int i = 0; i < array_size; i++){
         bricks_list[i] = initialize_brick(bricks_qualities_list[i][0], bricks_qualities_list[i][1], bricks_qualities_list[i][2], bricks_qualities_list[i][3], bricks_qualities_list[i][4], renderer);
+        if(bricks_list[i].health_points != 4){
+            active_bricks++;
+        }
     }
     Uint32 last_ticks = 0;
     widgets health_widget = initialize_widgets_health(renderer);
@@ -48,25 +36,29 @@ void game(){
     int first_collision = 0;
     clock_t started_time = 0;
     bool flag_lose_screen = false;
+    bool flag_win_screen = false;
     // Uint32 timer_ticks;
     widgets lost_screen = initialize_loser_screen(renderer);
+    widgets win_screen = initialize_winner_screen(renderer);
 
     while(true){
-        
+        if(active_bricks <= 0){
+            flag_win_screen = true;
+        }
         if(SDL_GetTicks() - last_ticks < INPUT_DELAY){
             continue;
         }
         else{
             last_ticks = SDL_GetTicks();
         }
-        if(flag_lose_screen == false){
+        if(flag_lose_screen == false && flag_win_screen == false){
             if (health_count <= 0){
                 flag_lose_screen = true;
             }
             draw_widget_health(&health_widget, renderer, health_count);
             draw_racket(renderer, main_racket);
             draw_ball(renderer, main_ball);
-            draw_bricks(bricks_list, level_count_bricks, renderer);
+            draw_bricks(bricks_list, array_size, renderer);
             if(is_bonus_extra_life_active == true){
                 draw_bonus_extra_life(renderer, &bonus_extra_life);
                 bonus_extra_life.drect.y += bonus_extra_life.speed.y;
@@ -115,15 +107,20 @@ void game(){
         if(flag_lose_screen == true){
             draw_widget_lose_screen(&lost_screen, renderer);
         }
-        
+        else if(flag_win_screen == true){
+            draw_widget_win_screen(&win_screen, renderer);
+        }
         if(main_ball.is_active == true){
-            for(int i = 0; i < level_count_bricks; i++){
+            for(int i = 0; i < array_size; i++){
                 if(bricks_list[i].is_existing == true){
                     check_collision(&main_ball, &bricks_list[i].rect, 2);
                     if (main_ball.is_changed == true){          
                         main_ball.is_changed = false;
                         if(first_collision == 0){first_collision = 1;}
                         change_health_point(&bricks_list[i]);
+                        if(bricks_list[i].is_existing == false){
+                            active_bricks --;
+                        }
                         change_colour_bricks(&bricks_list[i], renderer);
                     }
                     if(bricks_list[i].is_existing == false){
@@ -209,7 +206,8 @@ void game(){
                             break;
                         case SDLK_ESCAPE:
                             exit(0);
-                            break;
+                        case SDLK_0:
+                            return;
                    }
             }
         } 
@@ -219,8 +217,5 @@ void game(){
         SDL_RenderClear(renderer);
     }
 
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-    return EXIT_SUCCESS;
+    return;
 }

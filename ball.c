@@ -44,7 +44,7 @@ int check_collision_borders(ball current_ball){
 void check_collision(ball *current_ball, SDL_Rect *current_rect, float flag){
     if (flag == 1){
         if (current_ball->hitbox.x <= current_rect->x + current_rect->w 
-                && current_ball->hitbox.x >= current_rect->x 
+                && current_ball->hitbox.x+current_ball->hitbox.w >= current_rect->x 
                 && current_ball->hitbox.y + current_ball->hitbox.h > current_rect->y) {
                 current_ball->speed.y *= -1;
                 // current_ball->hitbox.y -= 5;

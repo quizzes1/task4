@@ -70,10 +70,50 @@ widgets initialize_loser_screen(SDL_Renderer * renderer){
     text_colour.b = 255;
     text_colour.a = SDL_ALPHA_OPAQUE;
 
-    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_widget.font, "GAME OVER!\npress \nescape to quit\nenter to menu", text_colour, 900);
+    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_widget.font, "GAME OVER!\npress \nescape to quit\n0 to menu", text_colour, 900);
     SDL_Texture *lost_text = SDL_CreateTextureFromSurface(renderer, stext);
     
     initializing_widget.texture = lost_text;
+    initializing_widget.drect.h = 150;
+    initializing_widget.drect.w = 400;
+    initializing_widget.drect.x = SCREEN_WIDTH/2-initializing_widget.drect.w;
+    initializing_widget.drect.y = SCREEN_HEIGHT/2 - initializing_widget.drect.h;
+
+    initializing_widget.image_rect.h = 200;
+    initializing_widget.image_rect.w = 200;
+    initializing_widget.image_rect.x = 1000;
+    initializing_widget.image_rect.y = 180;
+
+    return initializing_widget;
+}
+
+widgets initialize_winner_screen(SDL_Renderer * renderer){
+    widgets initializing_widget;
+    TTF_Init();
+    initializing_widget.font = TTF_OpenFont("fonts_and_images/font.ttf", 100);
+
+    if (!initializing_widget.font){
+        printf("Cannot download font!");
+        exit(0);
+    }
+
+    initializing_widget.image_texture = IMG_LoadTexture(renderer, "fonts_and_images/win.png");
+
+    if (!initializing_widget.image_texture){
+        printf("Cannot download win image!");
+        exit(0);
+    }
+
+    SDL_Color text_colour;
+    text_colour.r = 255;
+    text_colour.g = 255;
+    text_colour.b = 255;
+    text_colour.a = SDL_ALPHA_OPAQUE;
+
+    SDL_Surface *stext = TTF_RenderText_Blended_Wrapped(initializing_widget.font, "YOU WIN!\npress \nescape to quit\n0 to menu", text_colour, 900);
+    SDL_Texture *win_text = SDL_CreateTextureFromSurface(renderer, stext);
+    
+    initializing_widget.texture = win_text;
     initializing_widget.drect.h = 150;
     initializing_widget.drect.w = 400;
     initializing_widget.drect.x = SCREEN_WIDTH/2-initializing_widget.drect.w;
@@ -137,6 +177,10 @@ void draw_widget_lose_screen(widgets *current_widget, SDL_Renderer * renderer){
     SDL_RenderCopy(renderer, current_widget->image_texture, NULL, &current_widget->image_rect);
 }
 
+void draw_widget_win_screen(widgets *current_widget, SDL_Renderer * renderer){
+    SDL_RenderCopy(renderer, current_widget->texture, NULL, &current_widget->drect);
+    SDL_RenderCopy(renderer, current_widget->image_texture, NULL, &current_widget->image_rect);
+}
 
 void draw_widget_health(widgets *current_widget, SDL_Renderer * renderer, int health_count){
     SDL_RenderCopy(renderer, current_widget->texture, NULL, &current_widget->drect);

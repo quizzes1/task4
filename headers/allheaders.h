@@ -18,4 +18,4 @@ typedef struct rgb {
     int b;
 } rgb;
 
-bool is_menu;
+void game(int bricks_qualities_list[][5], int array_size, SDL_Window *window, SDL_Renderer * renderer);
